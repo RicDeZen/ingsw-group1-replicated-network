@@ -1,2 +1,3 @@
-include ':demo', ':repnetwork'
+include ':demo', ':repnetwork', ':msglibrary'
 rootProject.name='ingsw-group1-replicated-network'
+project(':msglibrary').projectDir = new File('ingsw-group1-message-library/msglibrary')
