@@ -1,0 +1,2 @@
+include ':demo', ':repnetwork'
+rootProject.name='ingsw-group1-replicated-network'
