@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import ingsw.group1.msglibrary.SMSMessage;
 import ingsw.group1.msglibrary.SMSPeer;
@@ -25,6 +26,7 @@ import static org.junit.Assert.assertTrue;
         * REMOVE_RESOURCE [KEY] [IGNORED]
         * ADD_RESOURCE [KEY] [VALUE]
         */
+@Config(sdk = 28)
 @RunWith(RobolectricTestRunner.class)
 public class NetworkActionTest {
     NetworkAction testAction;

@@ -11,7 +11,7 @@ import ingsw.group1.msglibrary.SMSMessage;
  * Structure of an Action that uses numerical code identification and generic types Parameter and extra Parameter
  */
 
-abstract class ActionStructure<T extends Comparable<T>> {
+abstract class ActionStructure<T extends Comparable<T>, P extends Peer<T, P>> {
 
     abstract public boolean isValid();
 
@@ -23,8 +23,8 @@ abstract class ActionStructure<T extends Comparable<T>> {
 
     abstract public T getExtra();
 
-    abstract public void setDestinationPeer(@NonNull Peer<T> peer);
+    abstract public void setDestinationPeer(@NonNull P peer);
 
-    abstract public Peer<T> getPeer();
+    abstract public P getPeer();
 
 }

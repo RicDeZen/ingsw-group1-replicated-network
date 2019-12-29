@@ -2,7 +2,6 @@ package ingsw.group1.repnetwork;
 
 import androidx.annotation.NonNull;
 
-import ingsw.group1.msglibrary.Peer;
 import ingsw.group1.msglibrary.SMSMessage;
 import ingsw.group1.msglibrary.SMSPeer;
 import ingsw.group1.repnetwork.exceptions.InvalidActionFormatException;
@@ -23,7 +22,7 @@ import ingsw.group1.repnetwork.exceptions.InvalidActionFormatException;
  * REMOVE_RESOURCE [KEY] [IGNORED]
  * ADD_RESOURCE [KEY] [VALUE]
  */
-class NetworkAction extends ActionStructure<String> {
+class NetworkAction extends ActionStructure<String, SMSPeer> {
     private static final String SEPARATOR = "\r";
     private static final String MSG_SYNTAX_ACTION_ERR = "Parameter action out of range. Expected {0-7}, got: ";
     private static final String MSG_SYNTAX_ARG_ERR = "Parameter \"arg\" can't be empty for this action";
@@ -178,7 +177,7 @@ class NetworkAction extends ActionStructure<String> {
         } else throw new IllegalArgumentException(FORMATTED_ACTION_NOT_FOUND_ERROR_MSG);
     }
 
-    public void setDestinationPeer(@NonNull Peer<String> peer) {
+    public void setDestinationPeer(@NonNull SMSPeer peer) {
         if (peer instanceof SMSPeer && peer.isValid()) {
             currentPeer = (SMSPeer) peer;
         }
@@ -242,7 +241,7 @@ class NetworkAction extends ActionStructure<String> {
     /**
      * @return the Peer that forwarded the action (if the action has been received), the peer that will receive the action (if the action is to send/perform), null if it was not set
      */
-    public Peer<String> getPeer() {
+    public SMSPeer getPeer() {
         return currentPeer;
     }
 }
