@@ -301,7 +301,7 @@ public class NetworkDictionaryTest {
         assertEquals(sampleDictionary.countPeers(), 0);
         int count = 100;
         for (int i = 0; i < count; i++)
-            sampleDictionary.addPeer(new SMSPeer("+390425" + i));
+            sampleDictionary.addPeer(new SMSPeer("+390425345" + i));
         assertEquals(sampleDictionary.countPeers(), count);
     }
 

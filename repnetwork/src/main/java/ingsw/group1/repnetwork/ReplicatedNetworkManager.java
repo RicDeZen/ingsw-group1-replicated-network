@@ -63,7 +63,7 @@ public class ReplicatedNetworkManager implements ReplicatedNetworkInterface<SMSM
      * Method to send some kind of broadcast to the whole network
      * @param action the action to broadcast
      */
-    private void broadcast(ActionStructure<String> action){
+    private void broadcast(ActionStructure<String, SMSPeer> action){
         for(SMSPeer peer : getAvailablePeers()) {
             if (!peer.equals(myPeer)) {
                 action.setDestinationPeer(peer);
@@ -80,7 +80,7 @@ public class ReplicatedNetworkManager implements ReplicatedNetworkInterface<SMSM
     public void invite(SMSPeer newPeer) {
         if(!isConnectedToPeer(newPeer))
         {
-            ActionStructure<String> inviteAction = new NetworkAction(NetworkAction.Type.INVITE, NetworkAction.DEFAULT_IGNORED, NetworkAction.DEFAULT_IGNORED);
+            ActionStructure<String, SMSPeer> inviteAction = new NetworkAction(NetworkAction.Type.INVITE, NetworkAction.DEFAULT_IGNORED, NetworkAction.DEFAULT_IGNORED);
             inviteAction.setDestinationPeer(newPeer);
             perform(inviteAction);
         }
@@ -93,7 +93,7 @@ public class ReplicatedNetworkManager implements ReplicatedNetworkInterface<SMSM
     @Override
     public void acceptInvite(SMSPeer inviter) {
         if(!isPartOfNetwork){
-            ActionStructure<String> acceptInviteAction = new NetworkAction(NetworkAction.Type.ANSWER_INVITE, NetworkAction.DEFAULT_IGNORED, NetworkAction.DEFAULT_IGNORED);
+            ActionStructure<String, SMSPeer> acceptInviteAction = new NetworkAction(NetworkAction.Type.ANSWER_INVITE, NetworkAction.DEFAULT_IGNORED, NetworkAction.DEFAULT_IGNORED);
             acceptInviteAction.setDestinationPeer(inviter);
             perform(acceptInviteAction);
             dictionary.addPeer(inviter);
@@ -121,7 +121,7 @@ public class ReplicatedNetworkManager implements ReplicatedNetworkInterface<SMSM
      */
     private void onInviteAccepted(SMSPeer invited) {
         dictionary.addPeer(invited);
-        ActionStructure<String> greetAction = new NetworkAction(NetworkAction.Type.GREET_USER, invited.getAddress(), NetworkAction.DEFAULT_IGNORED);
+        ActionStructure<String, SMSPeer> greetAction = new NetworkAction(NetworkAction.Type.GREET_USER, invited.getAddress(), NetworkAction.DEFAULT_IGNORED);
         broadcast(greetAction);
         //This Peer wasn't part of a network but now it is since someone accepted its invitation.
         if(!isPartOfNetwork) isPartOfNetwork = true;
@@ -137,7 +137,7 @@ public class ReplicatedNetworkManager implements ReplicatedNetworkInterface<SMSM
     private void sendResources(SMSPeer targetPeer){
         StringResource[] existingResources = dictionary.getResources();
         for(StringResource resource : existingResources){
-            ActionStructure<String> addResourceAction = new NetworkAction(NetworkAction.Type.ADD_RESOURCE,
+            ActionStructure<String, SMSPeer> addResourceAction = new NetworkAction(NetworkAction.Type.ADD_RESOURCE,
                     resource.getName(),
                     resource.getValue());
             addResourceAction.setDestinationPeer(targetPeer);
@@ -151,7 +151,7 @@ public class ReplicatedNetworkManager implements ReplicatedNetworkInterface<SMSM
      */
     public void createResource(StringResource newResource) {
         dictionary.addResource(newResource);
-        ActionStructure<String> addResource = new NetworkAction(NetworkAction.Type.ADD_RESOURCE,
+        ActionStructure<String, SMSPeer> addResource = new NetworkAction(NetworkAction.Type.ADD_RESOURCE,
                 newResource.getName(),
                 newResource.getValue());
         broadcast(addResource);
@@ -209,7 +209,7 @@ public class ReplicatedNetworkManager implements ReplicatedNetworkInterface<SMSM
         String usefulMessage = message.getData().replace(SMSHandler.APP_KEY, "");
         SMSMessage receivedMessage = new SMSMessage(message.getPeer(), usefulMessage);
 
-        ActionStructure<String> receivedAction = new NetworkAction(receivedMessage);
+        ActionStructure<String, SMSPeer> receivedAction = new NetworkAction(receivedMessage);
 
         performAction(receivedAction);
     }
@@ -218,7 +218,7 @@ public class ReplicatedNetworkManager implements ReplicatedNetworkInterface<SMSM
      * Method to perform an action received through the Network
      * @param action the action to broadcast
      */
-    private void performAction(ActionStructure<String> action){
+    private void performAction(ActionStructure<String, SMSPeer> action){
         switch(action.getAction()){
             case NetworkAction.Type.INVITE:
                 acceptInvite((SMSPeer) action.getPeer());
